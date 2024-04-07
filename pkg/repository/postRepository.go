@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 
@@ -64,4 +65,23 @@ func (r *PostRepository) GetAll() ([]model.Post, error) {
 	}
 
 	return posts, nil
+}
+
+func (r *PostRepository) GetPostByID(postID int64) (model.Post, error) {
+	var post model.Post
+
+	// SQL statement to select a post by ID
+	query := `
+	SELECT PostID, UserID, Title, Content, CreatedAt, UpdatedAt FROM Posts
+	WHERE PostID = ?
+	`
+
+	row := r.db.QueryRow(query, postID)
+	if err := row.Scan(&post.PostID, &post.UserID, &post.Title, &post.Content, &post.CreatedAt, &post.UpdatedAt); err != nil {
+		if err == sql.ErrNoRows {
+			log.Printf("Failed to get posts, no post found: %v", err)
+			return post, fmt.Errorf("GetPostByID %d: %v", postID, err)
+		}
+	}
+	return post, nil
 }
