@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/joshuahayesVCU/blog_api/config"
+	"github.com/joshuahayesVCU/blog-api/config"
 )
 
 func main() {
