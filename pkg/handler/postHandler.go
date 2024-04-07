@@ -13,9 +13,9 @@ type PostHandler struct {
 }
 
 type createPostRequest struct {
-	Title    string `json:"title" binding:"required"`
-	Content  string `json:"content" binding:"required"`
-	AuthorID int64  `json:"author_id" binding:"required"`
+	Title   string `json:"title" binding:"required"`
+	Content string `json:"content" binding:"required"`
+	UserID  int64  `json:"user_id" binding:"required"`
 }
 
 func NewPostHandler(service *service.PostService) *PostHandler {
@@ -32,9 +32,9 @@ func (h *PostHandler) CreatePost(c *gin.Context) {
 
 	// create a model.Post object from the request
 	post := model.Post{
-		Title:    req.Title,
-		Content:  req.Content,
-		AuthorID: req.AuthorID,
+		Title:   req.Title,
+		Content: req.Content,
+		UserID:  req.UserID,
 	}
 
 	// call the service layer to create the post
@@ -47,4 +47,13 @@ func (h *PostHandler) CreatePost(c *gin.Context) {
 
 	// If successful, return a success message and a 201
 	c.JSON(http.StatusCreated, gin.H{"message": "Post created successfully"})
+}
+
+func (h *PostHandler) GetAllPosts(c *gin.Context) {
+	posts, err := h.service.GetAllPosts()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		return
+	}
+	c.JSON(http.StatusOK, posts)
 }

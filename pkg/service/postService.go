@@ -17,3 +17,8 @@ func (s *PostService) CreatePost(post *model.Post) error {
 	// Business logic like validation would be done here
 	return s.repo.Create(post)
 }
+
+func (s *PostService) GetAllPosts() ([]model.Post, error) {
+	// Business logic like validation would be done here
+	return s.repo.GetAll()
+}
